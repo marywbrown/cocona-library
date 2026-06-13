@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cocona 运营内容库 · Mavis 每日推送</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --card: #ffffff;
+    --line: #e9e3d6;
+    --line-soft: #f0ebde;
+    --ink: #14171e;
+    --ink-2: #3a4256;
+    --ink-3: #7c7a72;
+    --primary: #2f6f5e;
+    --primary-light: #4a8e7c;
+    --accent: #c97b3f;
+    --warn: #b06367;
+    --star: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Outfit', 'PingFang SC', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100dvh;
+  }
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    width: 480px; height: 480px;
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  body::before {
+    top: -200px; right: -200px;
+    background: radial-gradient(circle, rgba(193,123,63,0.07) 0%, transparent 70%);
+  }
+  body::after {
+    bottom: -200px; left: -200px;
+    background: radial-gradient(circle, rgba(47,111,94,0.06) 0%, transparent 70%);
+  }
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Hero */
+  .hero { margin-bottom: 36px; }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: rgba(47,111,94,0.08);
+    color: var(--primary);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 18px;
+  }
+  .tag::before {
+    content: "";
+    width: 6px; height: 6px;
+    background: var(--primary);
+    border-radius: 50%;
+  }
+  h1 {
+    font-family: 'DM Serif Display', 'Songti SC', serif;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .lede {
+    font-size: 15.5px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    max-width: 640px;
+  }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    align-items: center;
+  }
+  .toolbar-label {
+    font-size: 13px;
+    color: var(--ink-3);
+    font-weight: 500;
+    margin-right: 4px;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--ink-2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { background: var(--line-soft); }
+  .filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .export-btn {
+    margin-left: auto;
+    padding: 8px 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+  }
+  .export-btn:hover { background: var(--primary-light); }
+  .export-btn svg { width: 14px; height: 14px; }
+  .stats {
+    width: 100%;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Section */
+  .sec-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 40px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sec-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--ink);
+    font-weight: 400;
+    flex: 1;
+  }
+  .sec-date {
+    font-size: 12px;
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.025);
+    transition: all 0.2s;
+    position: relative;
+  }
+  .card:hover {
+    box-shadow: 0 4px 16px -2px rgba(0,0,0,0.06);
+  }
+  .card.hidden { display: none; }
+  .card.starred { border-color: rgba(245,158,11,0.4); }
+  .card.starred::before {
+    content: "⭐ 已收藏";
+    position: absolute;
+    top: -10px;
+    right: 18px;
+    background: var(--star);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .card.deleted {
+    opacity: 0.55;
+    background: var(--bg);
+    border-style: dashed;
+  }
+  .card.deleted .card-content { filter: blur(0.5px); }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .card-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tag-hot { background: rgba(176,99,103,0.13); color: var(--warn); }
+  .tag-tech { background: rgba(47,111,94,0.12); color: var(--primary); }
+  .tag-cn { background: rgba(193,123,63,0.13); color: var(--accent); }
+  .tag-cocona { background: rgba(47,111,94,0.08); color: var(--primary); }
+  .tag-post { background: rgba(99,102,241,0.13); color: #6366f1; }
+  .tag-comp { background: rgba(113,113,122,0.13); color: #52525b; }
+  .tag-priority { background: rgba(245,158,11,0.15); color: #d97706; }
+
+  .card-actions {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .icon-btn {
+    width: 30px; height: 30px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-3);
+    transition: all 0.15s;
+  }
+  .icon-btn:hover {
+    background: var(--line-soft);
+    color: var(--ink);
+  }
+  .icon-btn.starred {
+    background: rgba(245,158,11,0.15);
+    color: var(--star);
+    border-color: rgba(245,158,11,0.3);
+  }
+  .icon-btn.deleted-btn {
+    background: rgba(176,99,103,0.1);
+    color: var(--warn);
+    border-color: rgba(176,99,103,0.3);
+  }
+  .icon-btn svg { width: 14px; height: 14px; }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .card-content {
+    color: var(--ink-2);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .card-content p { margin-bottom: 8px; }
+  .card-content p:last-child { margin-bottom: 0; }
+  .star-mark { color: var(--star); font-weight: 600; }
+
+  /* Mark section - 标记区 */
+  .mark-section {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .mark-display {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .mark-display.star-mark-show {
+    background: rgba(245,158,11,0.08);
+    color: #92400e;
+  }
+  .mark-display.del-mark-show {
+    background: rgba(176,99,103,0.08);
+    color: #7c2d12;
+  }
+  .mark-display .mark-icon {
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .mark-display .mark-text {
+    flex: 1;
+  }
+  .mark-display .mark-edit {
+    background: none;
+    border: none;
+    color: inherit;
+    opacity: 0.5;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 4px;
+    text-decoration: underline;
+  }
+  .mark-display .mark-edit:hover { opacity: 1; }
+  .mark-add-btn {
+    background: none;
+    border: 1px dashed var(--line);
+    color: var(--ink-3);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+    transition: all 0.15s;
+  }
+  .mark-add-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(47,111,94,0.04);
+  }
+
+  /* Post preview */
+  .post-preview {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: var(--bg);
+    border-left: 3px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink-2);
+    white-space: pre-wrap;
+    font-family: inherit;
+  }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,23,30,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .modal-sub {
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+  }
+  .modal-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 80px;
+  }
+  .modal-input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .modal-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink-2);
+  }
+  .modal-btn.primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .modal-btn:hover { background: var(--line-soft); }
+  .modal-btn.primary:hover { background: var(--primary-light); }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-3);
+    background: var(--card);
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    display: none;
+  }
+  .empty.show { display: block; }
+  .empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.5; }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    color: var(--ink-3);
+    font-size: 13px;
+  }
+  footer strong { color: var(--ink-2); }
+
+  @media (max-width: 640px) {
+    .container { padding: 32px 18px 60px; }
+    h1 { font-size: 28px; }
+    .toolbar { padding: 12px; }
+    .export-btn { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="tag">Cocona 运营内容库</span>
+    <h1>Mavis 每日推送 · 永久收藏</h1>
+    <p class="lede">每天由 Mavis 精选推送的热点、技术、推文方案、竞品动态。<strong>⭐ 收藏时写一句话告诉 Mavis 你为什么收藏</strong> —— 你每天的标记会让我越来越懂你。</p>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <span class="toolbar-label">筛选:</span>
+    <button class="filter-btn active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="starred">⭐ 已收藏</button>
+    <button class="filter-btn" data-filter="hot">🔥 热点</button>
+    <button class="filter-btn" data-filter="tech">🛠️ 技术</button>
+    <button class="filter-btn" data-filter="post">📝 推文</button>
+    <button class="filter-btn" data-filter="comp">🔍 竞品</button>
+    <button class="export-btn" id="exportBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      导出我的标记
+    </button>
+    <div class="stats" id="stats">0 条</div>
+  </div>
+
+  <!-- ===== 2026-06-13 ===== -->
+  <div class="sec-head">
+    <span class="sec-num">2026-06-13</span>
+    <h2>今日推送</h2>
+    <span class="sec-date">日报</span>
+  </div>
+
+  <!-- 热点卡片 -->
+  <div class="card" data-tags="hot" data-id="hot-1-20260613" data-title="AI 伪实机视频爆火">
+    <div class="card-head">
+      <span class="card-tag tag-hot">🔥 热点</span>
+      <span class="card-tag tag-priority">⭐⭐⭐ 顶流</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">AI 伪实机视频爆火:任何人都能 2-3 天做出"3A 概念"</div>
+    <div class="card-content">
+      <p><span class="star-mark">@INK</span> 在 X 用 GPT Image 2 + Seedance 2.0 做的"3A 概念视频"播放 1100 万+,<span class="star-mark">@歸藏</span> 跟做"金瓶梅 MMO""黑神话:林冲"在小红书 B 站爆火。</p>
+      <p>工具组合可被复刻,任何会写 Prompt 的人 2-3 天能做出来。</p>
+      <p><strong>对 Cocona:</strong>策划用 Cocona 画布 5 分钟出"游戏 demo 样子",正是这股潮流的承接者。</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="hot" data-id="hot-2-20260613" data-title="Seedance 2.0 视频生成全球第一梯队">
+    <div class="card-head">
+      <span class="card-tag tag-hot">🔥 热点</span>
+      <span class="card-tag tag-priority">⭐⭐</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">Seedance 2.0:视频生成全球第一梯队</div>
+    <div class="card-content">
+      <p>字节 2026/2/12 发布,Artificial Analysis 图生视频 Elo 1183 第一。单段 5 秒 1080p 约 $0.60,角色一致性 + 物理模拟突破。</p>
+      <p><strong>对 Cocona:</strong>替代 Sora/Kling 降本提速,接 Seedance 直接缓解"模型慢贵"痛点。</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="hot tech cn" data-id="hot-3-20260613" data-title="腾讯 Hunyuan3D 体系爆发">
+    <div class="card-head">
+      <span class="card-tag tag-hot">🔥 热点</span>
+      <span class="card-tag tag-cn">🇨🇳 国产</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">腾讯 Hunyuan3D 体系爆发</div>
+    <div class="card-content">
+      <p>Hunyuan 3D 3.1 / HY-World 2.0 已开源,腾讯《元梦之星》《轻游梦工坊》接入。国内 8 视图输入、PBR 材质、自动骨骼绑定,3D 资产生成时间从 2 天缩到 0.2 天。</p>
+      <p><strong>对 Cocona:</strong>替代 Tripo 接入,价格优势 + 内部背书 + 实时世界场景生成。</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <!-- 技术卡片 -->
+  <div class="card" data-tags="tech cn" data-id="tech-1-20260613" data-title="Hunyuan3D 3.1">
+    <div class="card-head">
+      <span class="card-tag tag-tech">🛠️ 技术</span>
+      <span class="card-tag tag-cn">🇨🇳 国产</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">Tencent Hunyuan3D 3.1(2026/1 全球上线)</div>
+    <div class="card-content">
+      <p>支持 8 视图输入,PBR 纹理,导出 FBX/GLB/OBJ/STL。每日 20 次免费生成。腾讯混元 3D 创作引擎国际站已上线。<strong>强烈建议 Cocona 接入替代 Tripo。</strong></p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="tech cn" data-id="tech-2-20260613" data-title="HY-World 2.0">
+    <div class="card-head">
+      <span class="card-tag tag-tech">🛠️ 技术</span>
+      <span class="card-tag tag-cn">🇨🇳 国产</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">Tencent HY-World 2.0(2026/4/16 开源,世界模型)</div>
+    <div class="card-content">
+      <p>一句话生成 3D 资产 / 角色模式自由探索 / 多模态输入。可导出 Mesh/3DGS/点云,直接对接游戏引擎。GitHub、Hugging Face 已可下载。</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="tech" data-id="tech-3-20260613" data-title="GPT-image 2 + Seedance 2.0 工作流">
+    <div class="card-head">
+      <span class="card-tag tag-tech">🛠️ 技术</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">GPT-image 2 + Seedance 2.0 工作流</div>
+    <div class="card-content">
+      <p>9 张图 + 3 视频 + 3 音频,@ 标签参考。5 秒先试,15 秒再上,12 文件额度按场景分配。复刻 @INK 的"梦中情游视觉化"流程。</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="tech" data-id="tech-4-20260613" data-title="GPT Image 2 UI 99%">
+    <div class="card-head">
+      <span class="card-tag tag-tech">🛠️ 技术</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">GPT Image 2 UI 文本渲染 99% 准确</div>
+    <div class="card-content">
+      <p>这是 Cocona UI 模块的"放大器"。UI 概念稿质量直线上升,与"UI Kit 拆分"卡位完美配合。</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="tech" data-id="tech-5-20260613" data-title="each::sense 游戏资产生成">
+    <div class="card-head">
+      <span class="card-tag tag-tech">🛠️ 技术</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">each::sense AI Game Asset Generation</div>
+    <div class="card-content">
+      <p>一次性生成 2D Sprites / 角色精灵表 / 贴图 / UI 元素 / 图标。直接导出 Unity/Unreal 可用的资源。关注"游戏 UI Kit 自动拆分"潜在方向。</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <!-- Cocona 方向 -->
+  <div class="card" data-tags="cocona" data-id="cocona-1-20260613" data-title="接入 Hunyuan3D 替代 Tripo">
+    <div class="card-head">
+      <span class="card-tag tag-cocona">🎯 Cocona 方向</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">🎯 方向 1:接入腾讯 Hunyuan3D 3.1 替代 Tripo</div>
+    <div class="card-content">
+      <p><strong>原因:</strong>内部背书 + 价格优势 + 中文 prompt 友好 + 自动骨骼绑定</p>
+      <p><strong>落地:</strong>技术接入 → 推文发"我们换了国产 3D 模型,速度快 X 倍"对比视频</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="cocona" data-id="cocona-2-20260613" data-title="蹭 AI 概念视频流量">
+    <div class="card-head">
+      <span class="card-tag tag-cocona">🎯 Cocona 方向</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">🎯 方向 2:蹭 AI 概念视频流量</div>
+    <div class="card-content">
+      <p><strong>原因:</strong>@INK/@歸藏 在小红书有持续势能,工具组合可被复刻</p>
+      <p><strong>落地:</strong>用 Cocona 画布 5 分钟做"金瓶梅 MMO 角色/UI/场景"录屏,发小红书</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="cocona" data-id="cocona-3-20260613" data-title="立项 AI 拆 UI Kit">
+    <div class="card-head">
+      <span class="card-tag tag-cocona">🎯 Cocona 方向</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">🎯 方向 3:立项"AI 拆游戏 UI Kit"卡位</div>
+    <div class="card-content">
+      <p><strong>原因:</strong>全行业没人做,谁先做出来谁壁垒</p>
+      <p><strong>落地:</strong>内部调研 GPT Image 2 + 现有方案的可行性,推文讲"我们在做一件很难但很重要的事"</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <!-- 推文卡片 -->
+  <div class="card" data-tags="post" data-id="post-1-20260613" data-title="金瓶梅 MMO 推文">
+    <div class="card-head">
+      <span class="card-tag tag-post">📝 推文 1</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">「用 Cocona 5 分钟做出金瓶梅 MMO 角色」</div>
+    <div class="card-content">
+      <p><strong>封面:</strong>黑金主色 + Cocona 画布三联屏(角色/UI/场景) + 顶部白字加粗 + 右下角"AI 预演"角标</p>
+    </div>
+    <div class="post-preview">用 Cocona 5 分钟做出"金瓶梅 MMO"角色👀
+-
+这几天 AI 概念视频圈被 @歸藏 的"金瓶梅 MMO"刷屏了
+评论区一半人在问"什么时候上 Steam"
+-
+我也手痒,直接在 Cocona 画布上试了 5 分钟
+- 角色用 Kling 出动态姿势
+- 场景用 NanoBanana 2 跑风格
+- UI 用 GPT Image 2 一次画对(99% 文本渲染真的香)
+-
+Cocona 不是工厂,是预演
+策划拿它 5 分钟做出"游戏 demo 的样子"
+拿去给老板/团队讲方案,效率拉满
+-
+#AI游戏 #设计预演 #金瓶梅MMO #独立游戏开发 #Cocona</div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="post" data-id="post-2-20260613" data-title="国产 3D 推文">
+    <div class="card-head">
+      <span class="card-tag tag-post">📝 推文 2</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">「国产 3D 模型真香警告」</div>
+    <div class="card-content">
+      <p><strong>封面:</strong>科技蓝 + 白色,左半 Cocona 画布里的 3D 角色(腾讯 Hunyuan3D 生成),右半旧 Tripo 流程截图,顶部"国产 3D 模型 / 速度 ×3 / 成本 -50%"</p>
+    </div>
+    <div class="post-preview">国产 3D 模型真香警告⚠️
+-
+之前用 Tripo 生成 3D 角色,3-5 分钟 + 单次 0.x 美元
+今天切到腾讯 Hunyuan3D 3.1 实测:
+- 速度:几乎实时
+- 质量:PBR 材质 + 8 视图输入,细节真的能打
+- 价格:有免费额度,API 走国产便宜
+- 中文 prompt 友好(谁用谁知道)
+-
+我们 Cocona 3D 模块准备切了
+你还在用海外的 3D 模型吗?
+-
+#国产AI #3D生成 #Hunyuan3D #独立游戏 #Cocona</div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="post" data-id="post-3-20260613" data-title="UI Kit 痛点推文">
+    <div class="card-head">
+      <span class="card-tag tag-post">📝 推文 3</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">「AI UI 漂亮但拆不出 Kit?这是游戏人真痛」</div>
+    <div class="card-content">
+      <p><strong>封面:</strong>暗紫 + 荧光绿,上半分层 UI mockup(漂亮但拆不开),下半 Cocona 思路示意,大字标题</p>
+    </div>
+    <div class="post-preview">AI 生成的 UI 漂亮但用不了?这才是游戏人真正的痛😩
+-
+GPT Image 2 文本渲染 99%
+生成的 UI mockup 真的像那么回事
+-
+但是!
+你让它拆成 UI Kit?
+底膜九宫格?分层贴图?可工化复用?
+全部失败❌
+-
+因为游戏 UI 有自己的工艺标准
+- 纹理/材质/贴图必须分层
+- 底膜九宫格/三宫格是基本功
+- 拆完要能进引擎,不是 PS
+-
+这件事全行业没人做
+所以 Cocona 在做了
+-
+#游戏UI #UI设计 #游戏开发痛点 #AI设计工具 #Cocona</div>
+    <div class="mark-section"></div>
+  </div>
+
+  <!-- 竞品卡片 -->
+  <div class="card" data-tags="comp" data-id="comp-learn-20260613" data-title="竞品学习">
+    <div class="card-head">
+      <span class="card-tag tag-comp">🔍 竞品 · 学习</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">竞品学习:即梦 v2025.11 / TapNow / Lovart</div>
+    <div class="card-content">
+      <p><strong>即梦 AI v2025.11:</strong>Agent 共创 + 多会话并行,游戏向未发力(窗口期)</p>
+      <p><strong>TapNow:</strong>节点式工作流,商业创作者画布体验值得参考</p>
+      <p><strong>Lovart:</strong>接 Nano Banana Pro,PS 级精细编辑能力(应对方法:UI Kit 卡位)</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="comp" data-id="comp-def-20260613" data-title="竞品防御">
+    <div class="card-head">
+      <span class="card-tag tag-comp">🔍 竞品 · 防御</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">竞品防御:Lovart 4K / 字节即梦潜在威胁</div>
+    <div class="card-content">
+      <p><strong>Lovart 4K 文本渲染</strong>可能分走 Cocona 的 UI 概念稿用户</p>
+      <p><strong>字节即梦</strong>若推"游戏向画布"会直接威胁(目前未动作,持续观察)</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <div class="card" data-tags="comp" data-id="comp-new-20260613" data-title="新竞品">
+    <div class="card-head">
+      <span class="card-tag tag-comp">🔍 竞品 · 新</span>
+      <div class="card-actions">
+        <button class="icon-btn star-btn" title="收藏 + 写标记"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        <button class="icon-btn del-btn" title="隐藏 + 写原因"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div>
+    </div>
+    <div class="card-title">新竞品:each::sense AI Game Asset Generation</div>
+    <div class="card-content">
+      <p>Skill 化游戏资产生成,关注其与 Cocona 的关系。</p>
+    </div>
+    <div class="mark-section"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty" id="emptyState">
+    <div class="empty-icon">📭</div>
+    <p>这个筛选下没有内容</p>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <div class="modal-title" id="modalTitle">写一句话标记</div>
+      <div class="modal-sub" id="modalSub">告诉 Mavis 你为什么 ⭐ 这条(我每天会扫描学习)</div>
+      <textarea class="modal-input" id="modalInput" placeholder="例:这个对我做 UI Kit 拆分有启发 / 这种风格适合二次创作 / 不感兴趣因为太宽泛..."></textarea>
+      <div class="modal-actions">
+        <button class="modal-btn" id="modalSkip">跳过</button>
+        <button class="modal-btn" id="modalCancel">取消</button>
+        <button class="modal-btn primary" id="modalSave">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>Cocona 运营内容库</strong> · 由 Mavis 每日自动更新</p>
+    <p style="margin-top: 6px;">📅 最后更新:2026-06-13 · 收藏标记保存在浏览器本地,导出后可发给 Mavis 学习</p>
+  </footer>
+
+</div>
+
+<script>
+  // === 状态管理 ===
+  const STORAGE_KEY = 'cocona-library-state-v2';
+  const MARKS_KEY = 'cocona-library-marks-v1';
+
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+  function loadMarks() {
+    try { return JSON.parse(localStorage.getItem(MARKS_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function saveMarks(m) { localStorage.setItem(MARKS_KEY, JSON.stringify(m)); }
+  function getCardId(card) { return card.dataset.id; }
+  function getCardTitle(card) { return card.dataset.title || card.querySelector('.card-title')?.textContent || ''; }
+  function getCardTags(card) { return (card.dataset.tags || '').split(' ').filter(Boolean); }
+
+  // === 渲染标记区 ===
+  function renderMarkSection(card) {
+    const id = getCardId(card);
+    const marks = loadMarks();
+    const m = marks[id] || {};
+    const state = loadState()[id] || {};
+    const section = card.querySelector('.mark-section');
+    section.innerHTML = '';
+
+    // 已收藏 + 有收藏标记
+    if (state.starred && m.starMark) {
+      const div = document.createElement('div');
+      div.className = 'mark-display star-mark-show';
+      div.innerHTML = `
+        <span class="mark-icon">⭐</span>
+        <span class="mark-text"></span>
+        <button class="mark-edit">编辑</button>
+      `;
+      div.querySelector('.mark-text').textContent = m.starMark;
+      div.querySelector('.mark-edit').onclick = (e) => {
+        e.stopPropagation();
+        openModal(card, 'star');
+      };
+      section.appendChild(div);
+      return;
+    }
+
+    // 已删除 + 有删除原因
+    if (state.deleted && m.delMark) {
+      const div = document.createElement('div');
+      div.className = 'mark-display del-mark-show';
+      div.innerHTML = `
+        <span class="mark-icon">🗑</span>
+        <span class="mark-text"></span>
+        <button class="mark-edit">编辑</button>
+      `;
+      div.querySelector('.mark-text').textContent = m.delMark;
+      div.querySelector('.mark-edit').onclick = (e) => {
+        e.stopPropagation();
+        openModal(card, 'del');
+      };
+      section.appendChild(div);
+      return;
+    }
+
+    // 显示添加按钮(根据当前状态)
+    if (state.starred) {
+      const btn = document.createElement('button');
+      btn.className = 'mark-add-btn';
+      btn.textContent = '✏️ 写一句收藏理由(让 Mavis 更懂你)';
+      btn.onclick = (e) => { e.stopPropagation(); openModal(card, 'star'); };
+      section.appendChild(btn);
+    } else if (state.deleted) {
+      const btn = document.createElement('button');
+      btn.className = 'mark-add-btn';
+      btn.textContent = '✏️ 写一句不要这条的原因(让 Mavis 知道你的边界)';
+      btn.onclick = (e) => { e.stopPropagation(); openModal(card, 'del'); };
+      section.appendChild(btn);
+    } else {
+      // 既没收藏也没删除 - 不显示添加按钮
+    }
+  }
+
+  // === Modal ===
+  let currentCard = null;
+  let currentMode = null; // 'star' | 'del'
+
+  function openModal(card, mode) {
+    currentCard = card;
+    currentMode = mode;
+    const id = getCardId(card);
+    const marks = loadMarks();
+    const existing = mode === 'star' ? marks[id]?.starMark : marks[id]?.delMark;
+
+    const modal = document.getElementById('modalBg');
+    const title = document.getElementById('modalTitle');
+    const sub = document.getElementById('modalSub');
+    const input = document.getElementById('modalInput');
+
+    if (mode === 'star') {
+      title.textContent = '⭐ 为这条写一句收藏理由';
+      sub.textContent = '告诉 Mavis 你为什么觉得这条重要(我每天扫描学习)';
+    } else {
+      title.textContent = '🗑 为这条写一句不要的原因';
+      sub.textContent = '告诉 Mavis 哪里不感兴趣(我以后少推这类)';
+    }
+
+    input.value = existing || '';
+    modal.classList.add('show');
+    setTimeout(() => input.focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('modalBg').classList.remove('show');
+    currentCard = null;
+    currentMode = null;
+  }
+
+  document.getElementById('modalSave').onclick = () => {
+    if (!currentCard) return;
+    const id = getCardId(currentCard);
+    const text = document.getElementById('modalInput').value.trim();
+    const marks = loadMarks();
+    marks[id] = marks[id] || {};
+    if (currentMode === 'star') {
+      marks[id].starMark = text;
+      marks[id].starAt = new Date().toISOString();
+    } else {
+      marks[id].delMark = text;
+      marks[id].delAt = new Date().toISOString();
+    }
+    saveMarks(marks);
+    renderMarkSection(currentCard);
+    closeModal();
+  };
+
+  document.getElementById('modalSkip').onclick = () => {
+    // 跳过 = 收藏/删除 但不写标记
+    closeModal();
+  };
+
+  document.getElementById('modalCancel').onclick = closeModal;
+
+  // === 操作 ===
+  function bindActions() {
+    document.querySelectorAll('.star-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.card');
+        const id = getCardId(card);
+        const state = loadState();
+        state[id] = state[id] || {};
+        state[id].starred = !state[id].starred;
+        // 取消删除(互斥)
+        if (state[id].starred) state[id].deleted = false;
+        if (state[id].starred) {
+          card.classList.add('starred');
+          card.classList.remove('deleted');
+          btn.classList.add('starred');
+          card.querySelector('.del-btn').classList.remove('deleted-btn');
+        } else {
+          card.classList.remove('starred');
+          btn.classList.remove('starred');
+        }
+        saveState(state);
+        renderMarkSection(card);
+        updateStats();
+        // 弹模态框让用户写标记
+        if (state[id].starred) {
+          setTimeout(() => openModal(card, 'star'), 100);
+        }
+      });
+    });
+
+    document.querySelectorAll('.del-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.card');
+        const id = getCardId(card);
+        const state = loadState();
+        state[id] = state[id] || {};
+        state[id].deleted = !state[id].deleted;
+        if (state[id].deleted) state[id].starred = false;
+        if (state[id].deleted) {
+          card.classList.add('deleted');
+          card.classList.remove('starred');
+          btn.classList.add('deleted-btn');
+          card.querySelector('.star-btn').classList.remove('starred');
+        } else {
+          card.classList.remove('deleted');
+          btn.classList.remove('deleted-btn');
+        }
+        saveState(state);
+        renderMarkSection(card);
+        updateStats();
+        if (state[id].deleted) {
+          setTimeout(() => openModal(card, 'del'), 100);
+        }
+      });
+    });
+  }
+
+  // === 筛选 ===
+  function bindFilters() {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilter(btn.dataset.filter);
+        updateStats();
+      });
+    });
+  }
+
+  function applyFilter(filter) {
+    const cards = document.querySelectorAll('.card');
+    let visible = 0;
+    cards.forEach(card => {
+      const tags = (card.dataset.tags || '').split(' ');
+      const id = getCardId(card);
+      const s = loadState()[id] || {};
+      let show = true;
+      if (s.deleted && filter !== 'all') show = false;
+      if (filter === 'starred' && !s.starred) show = false;
+      if (filter !== 'all' && filter !== 'starred' && !tags.includes(filter)) show = false;
+      if (show) { card.classList.remove('hidden'); visible++; }
+      else { card.classList.add('hidden'); }
+    });
+    document.getElementById('emptyState').classList.toggle('show', visible === 0);
+  }
+
+  function updateStats() {
+    const cards = document.querySelectorAll('.card');
+    let total = cards.length, visible = 0, starred = 0;
+    cards.forEach(card => {
+      const id = getCardId(card);
+      const s = loadState()[id] || {};
+      if (s.starred) starred++;
+      if (!card.classList.contains('hidden')) visible++;
+    });
+    document.getElementById('stats').textContent = `共 ${total} 条 · 收藏 ${starred} · 显示 ${visible}`;
+  }
+
+  // === 导出标记 ===
+  document.getElementById('exportBtn').onclick = () => {
+    const state = loadState();
+    const marks = loadMarks();
+    const cards = document.querySelectorAll('.card');
+
+    const lines = [];
+    lines.push('# Cocona 运营内容库 · 用户标记导出');
+    lines.push(`# 导出时间:${new Date().toISOString()}`);
+    lines.push('');
+
+    let starredCount = 0, deletedCount = 0;
+    cards.forEach(card => {
+      const id = getCardId(card);
+      const title = getCardTitle(card);
+      const tags = getCardTags(card);
+      const s = state[id] || {};
+      const m = marks[id] || {};
+
+      if (s.starred && m.starMark) {
+        starredCount++;
+        lines.push(`## ⭐ 收藏: ${title}`);
+        lines.push(`- 标签: ${tags.join(', ')}`);
+        lines.push(`- 收藏时间: ${m.starAt || '未知'}`);
+        lines.push(`- **收藏理由**: ${m.starMark}`);
+        lines.push('');
+      }
+    });
+
+    cards.forEach(card => {
+      const id = getCardId(card);
+      const title = getCardTitle(card);
+      const tags = getCardTags(card);
+      const s = state[id] || {};
+      const m = marks[id] || {};
+
+      if (s.deleted && m.delMark) {
+        deletedCount++;
+        lines.push(`## 🗑 不感兴趣: ${title}`);
+        lines.push(`- 标签: ${tags.join(', ')}`);
+        lines.push(`- 隐藏时间: ${m.delAt || '未知'}`);
+        lines.push(`- **不要的原因**: ${m.delMark}`);
+        lines.push('');
+      }
+    });
+
+    lines.push('---');
+    lines.push(`统计:收藏 ${starredCount} 条 · 不感兴趣 ${deletedCount} 条`);
+
+    const text = lines.join('\n');
+    const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cocona-marks-${new Date().toISOString().slice(0,10)}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    // 同时复制到剪贴板
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert(`✅ 已导出 ${starredCount} 个收藏 + ${deletedCount} 个不感兴趣\n\n文件已下载,内容也已复制到剪贴板\n\n你可以:\n1. 直接粘贴发给我(Mavis)\n2. 或者把下载的 .md 文件发我`);
+      }).catch(() => {
+        alert(`✅ 已导出文件\n收藏 ${starredCount} 条 · 不感兴趣 ${deletedCount} 条`);
+      });
+    } else {
+      alert(`✅ 已导出文件\n收藏 ${starredCount} 条 · 不感兴趣 ${deletedCount} 条`);
+    }
+  };
+
+  // === 启动 ===
+  function init() {
+    document.querySelectorAll('.card').forEach(card => {
+      const id = getCardId(card);
+      const s = loadState()[id] || {};
+      if (s.starred) {
+        card.classList.add('starred');
+        card.querySelector('.star-btn').classList.add('starred');
+      }
+      if (s.deleted) {
+        card.classList.add('deleted');
+        card.querySelector('.del-btn').classList.add('deleted-btn');
+      }
+      renderMarkSection(card);
+    });
+    bindActions();
+    bindFilters();
+    updateStats();
+  }
+
+  init();
+</script>
+</body>
+</html>
