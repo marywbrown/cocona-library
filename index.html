@@ -22,6 +22,115 @@
     --star: #f59e0b;
     --down: #94a3b8;
   }
+  /* 📊 Mavis 每日情报模块 */
+  .intel-banner {
+    background: linear-gradient(135deg, rgba(47,111,94,0.06) 0%, rgba(193,123,63,0.04) 100%);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 22px 16px;
+    margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
+  }
+  .intel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .intel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .intel-icon { font-size: 18px; }
+  .intel-date {
+    font-size: 12px;
+    color: var(--ink-3);
+    font-weight: 400;
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+  }
+  .intel-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .intel-toggle:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .intel-toggle svg {
+    width: 12px; height: 12px;
+    transition: transform 0.2s;
+  }
+  .intel-toggle[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+  }
+  .intel-body {
+    display: none;
+    margin-top: 12px;
+  }
+  .intel-body.open { display: block; }
+  .intel-section {
+    margin-bottom: 14px;
+  }
+  .intel-section:last-child { margin-bottom: 0; }
+  .intel-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .intel-section ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .intel-section li {
+    font-size: 13px;
+    color: var(--ink-2);
+    padding: 3px 0;
+    line-height: 1.5;
+  }
+  .intel-section li strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .tag-up { color: #2f6f5e; font-size: 12px; margin-left: 4px; }
+  .tag-down { color: #b06367; font-size: 12px; margin-left: 4px; }
+  .tag-warn { color: #c97b3f; font-size: 12px; margin-left: 4px; }
+  .intel-conclusion {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--line-soft);
+  }
+  .intel-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .intel-source { margin-left: auto; font-style: italic; }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: var(--bg);
@@ -539,6 +648,67 @@
       <span class="tag">Cocona 运营内容库</span>
       <h1>Mavis 每日推送</h1>
       <p class="lede">信息层只读,推荐层可表态。喜欢就 ⭐ + 写理由,不感兴趣就 👎 + 写理由,都行,不写也行。</p>
+    </div>
+  </div>
+
+  <!-- 📊 Mavis 每日情报(置顶,自动同步飞书) -->
+  <div class="intel-banner" id="intelBanner">
+    <div class="intel-head">
+      <div class="intel-title">
+        <span class="intel-icon">📊</span>
+        <span>Mavis 每日情报</span>
+        <span class="intel-date" id="intelDate">2026-06-14</span>
+      </div>
+      <button class="intel-toggle" id="intelToggle" aria-expanded="false">
+        <span id="intelToggleText">展开历史</span>
+        <svg id="intelToggleIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+    <div class="intel-body" id="intelBody">
+      <div class="intel-section">
+        <h3>🎯 1. 价格波动(7 家)</h3>
+        <ul>
+          <li><strong>即梦 AI</strong>:视频生成降价 30%,新用户 0.1 元/秒 <span class="tag-up">⬆️ Cocona 仍占优</span></li>
+          <li><strong>Lovart</strong>:9.9 美元/月,新用户首月 50%off <span class="tag-warn">⚠️ 持平</span></li>
+          <li><strong>TapNow</strong>:维持 18 美元/月 <span class="tag-up">⬆️ Cocona 仍占优</span></li>
+          <li><strong>Hatchcanvas</strong>:企业版上调 20%,个人版不变 <span class="tag-down">⬇️ 利好 Cocona</span></li>
+          <li><strong>Ideogram</strong>:推出免费层(10 张/天) <span class="tag-down">⬇️ 影响低端用户</span></li>
+          <li><strong>Holi</strong>:新人优惠结束,价格上调 15% <span class="tag-up">⬆️ Cocona 仍占优</span></li>
+        </ul>
+        <p class="intel-conclusion">📌 结论:本周期内未出现低于 Cocona 报价的对手,无预警。</p>
+      </div>
+      <div class="intel-section">
+        <h3>🚀 2. 竞品动态</h3>
+        <ul>
+          <li>即梦 发布「视频角色一致性」新功能(对标 Cocona 强项)</li>
+          <li>Lovart 完成 B 轮 5000 万美元融资,估值翻倍</li>
+          <li>TapNow 与腾讯《和平精英》达成官方合作</li>
+        </ul>
+      </div>
+      <div class="intel-section">
+        <h3>🔥 3. 行业趋势</h3>
+        <ul>
+          <li>「AI 一键做游戏」赛道进入红海预警期 —— 6 月新增 3 款同类工具</li>
+          <li>像素风 AI 生成搜索量周环比 +47%(Google Trends)</li>
+          <li>独立游戏开发者社区(Reddit r/IndieGame)对"AI 工具降本"讨论热度持续上升</li>
+        </ul>
+      </div>
+      <div class="intel-section">
+        <h3>⚠️ 4. 风险预警</h3>
+        <ul>
+          <li>无重大负面舆情</li>
+          <li>监管层面:网信办「生成式 AI 备案」新规细则预计 7 月发布,需关注对 Cocona 母品牌的潜在影响</li>
+        </ul>
+      </div>
+      <div class="intel-section">
+        <h3>🎯 5. 行动建议</h3>
+        <p>如发现 Lovart 推出新功能/新低价,<strong>24 小时内同步 Cocona 调整</strong>。</p>
+      </div>
+    </div>
+    <div class="intel-foot">
+      <span>📅 数据截止:16:00 北京时间</span>
+      <span>🔔 下次推送:2026-06-15 08:00 UTC</span>
+      <span class="intel-source">来源:飞书群「游戏AI战地记者」Mavis 机器人推送</span>
     </div>
   </div>
 
@@ -1234,6 +1404,26 @@ GPT Image 2 文本渲染 99%
   }
 
   init();
+
+  // 📊 每日情报 展开/收起
+  (function() {
+    const toggle = document.getElementById('intelToggle');
+    const body = document.getElementById('intelBody');
+    const text = document.getElementById('intelToggleText');
+    if (!toggle || !body) return;
+    toggle.addEventListener('click', function() {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      if (expanded) {
+        toggle.setAttribute('aria-expanded', 'false');
+        body.classList.remove('open');
+        text.textContent = '展开历史';
+      } else {
+        toggle.setAttribute('aria-expanded', 'true');
+        body.classList.add('open');
+        text.textContent = '收起';
+      }
+    });
+  })();
 </script>
 </body>
 </html>
